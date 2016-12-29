@@ -1,0 +1,4 @@
+project=chains
+architecture=container
+test=minitest
+template=erb
