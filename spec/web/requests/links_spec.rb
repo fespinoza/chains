@@ -25,16 +25,34 @@ class LinksAPITests < Minitest::Test
     @link_repository.create(params)
   end
 
-  module POSTLinksTests
-    def test_saving_a_new_link
-      sample_link = { url: 'http://hanamirb.org/#install' }
+  def auth_header
+    username = ENV['HTTP_USERNAME']
+    password = ENV['HTTP_PASSWORD']
+    encoded_credentials = Base64.encode64("#{username}:#{password}")
+    { 'HTTP_AUTHORIZATION' => "Basic #{encoded_credentials}" }
+  end
 
-      response = post '/links', link: sample_link
+  module POSTLinksTests
+    def sample_link
+      {
+        url: 'http://hanamirb.org/#install',
+        tags: %w(ruby web-frameworks)
+      }
+    end
+
+    def test_saving_a_new_link
+      response = post '/links', { link: sample_link }, auth_header
       json_body = json_response(response)
 
       assert_equal response.status, 201
       assert_equal json_body[:link][:url], sample_link[:url]
       assert json_body[:link][:id]
+    end
+
+    def test_unauthenticated_request_to_save_link
+      response = post '/links', link: sample_link
+
+      assert_equal response.status, 401
     end
   end
 
@@ -46,7 +64,7 @@ class LinksAPITests < Minitest::Test
       ]
       urls.each { |url| create_link(url: url) }
 
-      response = get '/links'
+      response = get '/links', {}, auth_header
       json_body = json_response(response)
 
       assert_equal response.status, 200
