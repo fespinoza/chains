@@ -4,6 +4,10 @@ require 'spec_helper'
 class LinksAPITests < Minitest::Test
   include Rack::Test::Methods
 
+  def setup
+    clear_links
+  end
+
   def app
     Hanami.app
   end
@@ -12,27 +16,41 @@ class LinksAPITests < Minitest::Test
     JSON.parse(response.body, symbolize_names: true)
   end
 
+  def clear_links
+    LinkRepository.new.clear
+  end
+
+  def create_link(params = {})
+    @link_repository ||= LinkRepository.new
+    @link_repository.create(params)
+  end
+
   module POSTLinksTests
     def test_saving_a_new_link
       sample_link = { url: 'http://hanamirb.org/#install' }
 
-      post '/links', link: sample_link
-
-      response  = last_response
+      response = post '/links', link: sample_link
       json_body = json_response(response)
 
-      response.status.must_equal 201
-      json_body[:link][:url].must_equal sample_link[:url]
+      assert_equal response.status, 201
+      assert_equal json_body[:link][:url], sample_link[:url]
       assert json_body[:link][:id]
     end
   end
 
   module GETLinksTests
     def test_fetching_saved_links
-      get '/links'
+      urls = [
+        'http://hanamirb.org/guides/models/entities/',
+        'https://github.com/hanami/model'
+      ]
+      urls.each { |url| create_link(url: url) }
 
-      last_response.must_be :ok?
-      last_response.body.must_equal(JSON.generate(links: []))
+      response = get '/links'
+      json_body = json_response(response)
+
+      assert_equal response.status, 200
+      assert_equal json_body[:links].map { |link| link[:url] }, urls
     end
   end
 

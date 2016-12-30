@@ -14,9 +14,5 @@ process_link = lambda do |_env|
   [201, { content_type: 'application/json' }, json_body]
 end
 
-return_links = lambda do |_env|
-  [200, {}, JSON.generate(links: [])]
-end
-
 post '/links', to: process_link
-get '/links', to: return_links
+get '/links', to: 'links#index'
