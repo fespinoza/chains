@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby '2.3.1'
+
 # The best way to manage your application's dependencies
 gem 'bundler'
 # Rake is a Make-like program implemented in Ruby
