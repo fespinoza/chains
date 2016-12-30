@@ -1,5 +1,8 @@
+# frozen_string_literal: true
 require 'hanami/helpers'
 require 'hanami/assets'
+
+require 'rack/auth/basic'
 
 module Web
   class Application < Hanami::Application
@@ -13,7 +16,8 @@ module Web
       #
       root __dir__
 
-      # Relative load paths where this application will recursively load the code.
+      # Relative load paths where this application will recursively load the
+      # code.
       # When you add new directories, remember to add them here.
       #
       load_paths << [
@@ -47,8 +51,10 @@ module Web
       # host 'example.org'
 
       # URI port used by the routing system to generate absolute URLs
-      # Argument: An object coercible to integer, default to 80 if the scheme is http and 443 if it's https
-      # This SHOULD be configured only in case the application listens to that non standard ports
+      # Argument: An object coercible to integer, default to 80 if the scheme
+      # is http and 443 if it's https
+      # This SHOULD be configured only in case the application listens to that
+      # non standard ports
       #
       # port 443
 
@@ -78,29 +84,35 @@ module Web
 
       # Configure Rack middleware for this application
       #
-      # middleware.use Rack::Protection
+      middleware.use Rack::Auth::Basic do |username, password|
+        Rack::Utils.secure_compare(username, ENV['HTTP_USERNAME']) &&
+          Rack::Utils.secure_compare(password, ENV['HTTP_PASSWORD'])
+      end
 
       # Default format for the requests that don't specify an HTTP_ACCEPT header
       # Argument: A symbol representation of a mime type, default to :html
       #
-      # default_request_format :html
+      default_request_format :json
 
-      # Default format for responses that doesn't take into account the request format
+      # Default format for responses that doesn't take into account the request
+      # format
       # Argument: A symbol representation of a mime type, default to :html
       #
       # default_response_format :html
 
       # HTTP Body parsers
       # Parse non GET responses body for a specific mime type
-      # Argument: Symbol, which represent the format of the mime type (only `:json` is supported)
+      # Argument: Symbol, which represent the format of the mime type (only
+      # `:json` is supported)
       #           Object, the parser
       #
       # body_parsers :json
 
       # When it's true and the router receives a non-encrypted request (http),
-      # it redirects to the secure equivalent resource (https). Default disabled.
+      # it redirects to the secure equivalent resource (https). Default
+      # disabled.
       #
-      # force_ssl true
+      force_ssl true
 
       ##
       # TEMPLATES
@@ -180,7 +192,8 @@ module Web
       #
       security.x_content_type_options 'nosniff'
 
-      # X-XSS-Protection is a HTTP header to determine the behavior of the browser
+      # X-XSS-Protection is a HTTP header to determine the behavior of the
+      # browser
       # in case an XSS attack is detected.
       #
       # Read more at:
@@ -190,7 +203,8 @@ module Web
       #
       security.x_xss_protection '1; mode=block'
 
-      # Content-Security-Policy (CSP) is a HTTP header supported by modern browsers.
+      # Content-Security-Policy (CSP) is a HTTP header supported by modern
+      # browsers.
       # It determines trusted sources of execution for dynamic contents
       # (JavaScript) or other web related assets: stylesheets, images, fonts,
       # plugins, etc.
