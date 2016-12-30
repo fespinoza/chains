@@ -112,7 +112,7 @@ module Web
       # it redirects to the secure equivalent resource (https). Default
       # disabled.
       #
-      # force_ssl true
+      force_ssl true
 
       ##
       # TEMPLATES

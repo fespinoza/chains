@@ -25,11 +25,9 @@ class LinksAPITests < Minitest::Test
     @link_repository.create(params)
   end
 
-  def auth_header
-    username = ENV['HTTP_USERNAME']
-    password = ENV['HTTP_PASSWORD']
-    encoded_credentials = Base64.encode64("#{username}:#{password}")
-    { 'HTTP_AUTHORIZATION' => "Basic #{encoded_credentials}" }
+  def common_request_preparation
+    basic_authorize ENV['HTTP_USERNAME'], ENV['HTTP_PASSWORD']
+    env 'HTTPS', 'on'
   end
 
   module POSTLinksTests
@@ -41,7 +39,8 @@ class LinksAPITests < Minitest::Test
     end
 
     def test_saving_a_new_link
-      response = post '/links', { link: sample_link }, auth_header
+      common_request_preparation
+      response = post '/links', link: sample_link
       json_body = json_response(response)
 
       assert_equal response.status, 201
@@ -50,6 +49,7 @@ class LinksAPITests < Minitest::Test
     end
 
     def test_unauthenticated_request_to_save_link
+      env 'HTTPS', 'on'
       response = post '/links', link: sample_link
 
       assert_equal response.status, 401
@@ -64,7 +64,8 @@ class LinksAPITests < Minitest::Test
       ]
       urls.each { |url| create_link(url: url) }
 
-      response = get '/links', {}, auth_header
+      common_request_preparation
+      response = get '/links'
       json_body = json_response(response)
 
       assert_equal response.status, 200
