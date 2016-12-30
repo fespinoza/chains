@@ -16,14 +16,18 @@ group :development do
   # Code reloading
   # See: http://hanamirb.org/guides/projects/code-reloading
   gem 'shotgun'
-
-  # An IRB alternative and runtime developer console
-  gem 'pry'
 end
 
 group :test, :development do
   # Loads environment variables from `.env`.
   gem 'dotenv', '~> 2.0'
+
+  # An IRB alternative and runtime developer console
+  gem 'pry'
+  # Open a pry session on any unhandled exceptions
+  gem 'pry-rescue'
+  # Walk the stack in a Pry session
+  gem 'pry-stack_explorer'
 end
 
 group :test do
