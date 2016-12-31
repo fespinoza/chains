@@ -7,12 +7,6 @@ module Web
         include Web::Action
         accept :json
 
-        params do
-          required(:link).schema do
-            required(:url).filled
-          end
-        end
-
         def call(params)
           link = LinkRepository.new.create(params[:link])
           self.status = 201
