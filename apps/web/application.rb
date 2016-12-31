@@ -5,6 +5,7 @@ require 'hanami/assets'
 require 'rack/auth/basic'
 
 module Web
+  # main file to configure the web application
   class Application < Hanami::Application
     configure do
       ##
@@ -20,10 +21,7 @@ module Web
       # code.
       # When you add new directories, remember to add them here.
       #
-      load_paths << %w(
-        controllers
-        views
-      )
+      load_paths << %w(controllers views)
 
       # Handle exceptions with HTTP statuses (true) or don't catch them (false).
       # Defaults to true.
@@ -63,12 +61,16 @@ module Web
       #           A Hash with options
       #
       # Options: :domain   - The domain (String - nil by default, not required)
-      #          :path     - Restrict cookies to a relative URI (String - nil by default)
-      #          :max_age  - Cookies expiration expressed in seconds (Integer - nil by default)
+      #          :path     - Restrict cookies to a relative URI (String - nil
+      #                      by default)
+      #          :max_age  - Cookies expiration expressed in seconds (Integer -
+      #                      nil by default)
       #          :secure   - Restrict cookies to secure connections
-      #                      (Boolean - Automatically set on true if currently using a secure connection)
+      #                      (Boolean - Automatically set on true if currently
+      #                      using a secure connection)
       #                      See #scheme and #ssl?
-      #          :httponly - Prevent JavaScript access (Boolean - true by default)
+      #          :httponly - Prevent JavaScript access (Boolean - true by
+      #                      default)
       #
       # cookies true
       # or
@@ -106,13 +108,13 @@ module Web
       # `:json` is supported)
       #           Object, the parser
       #
-      # body_parsers :json
+      body_parsers :json
 
       # When it's true and the router receives a non-encrypted request (http),
       # it redirects to the secure equivalent resource (https). Default
       # disabled.
       #
-      force_ssl true
+      force_ssl true if ENV['HANAMI_ENV'] == 'production'
 
       ##
       # TEMPLATES
@@ -158,10 +160,7 @@ module Web
         stylesheet_compressor :builtin
 
         # Specify sources for assets
-        #
-        sources << [
-          'assets'
-        ]
+        sources << ['assets']
       end
 
       ##
@@ -212,8 +211,8 @@ module Web
       # Web applications can send this header to mitigate Cross Site Scripting
       # (XSS) attacks.
       #
-      # The default value allows images, scripts, AJAX, fonts and CSS from the same
-      # origin, and does not allow any other resources to load (eg object,
+      # The default value allows images, scripts, AJAX, fonts and CSS from the
+      # same origin, and does not allow any other resources to load (eg object,
       # frame, media, etc).
       #
       # Inline JavaScript is NOT allowed. To enable it, please use:
@@ -264,10 +263,10 @@ module Web
       # This is useful for sharing common functionality
       #
       # See: http://www.rubydoc.info/gems/hanami-controller#Configuration
-      controller.prepare do
-        # include MyAuthentication # included in all the actions
-        # before :authenticate!    # run an authentication before callback
-      end
+      # controller.prepare do
+      #   include MyAuthentication # included in all the actions
+      #   before :authenticate!    # run an authentication before callback
+      # end
 
       # Configure the code that will yield each time Web::View is included
       # This is useful for sharing common functionality

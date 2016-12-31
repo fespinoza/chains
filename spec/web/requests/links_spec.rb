@@ -27,7 +27,6 @@ class LinksAPITests < Minitest::Test
 
   def common_request_preparation
     basic_authorize ENV['HTTP_USERNAME'], ENV['HTTP_PASSWORD']
-    env 'HTTPS', 'on'
   end
 
   module POSTLinksTests
@@ -54,7 +53,6 @@ class LinksAPITests < Minitest::Test
     end
 
     def test_unauthenticated_request_to_save_link
-      env 'HTTPS', 'on'
       response = post '/links', link: sample_link
 
       assert_equal response.status, 401

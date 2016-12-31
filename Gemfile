@@ -15,6 +15,9 @@ gem 'hanami-model', '~> 0.7'
 # Pg is the Ruby interface to the {PostgreSQL RDBMS}[http://www.postgresql.org/]
 gem 'pg'
 
+# A common interface to multiple JSON libraries.
+gem 'multi_json'
+
 group :development do
   # Code reloading
   # See: http://hanamirb.org/guides/projects/code-reloading
