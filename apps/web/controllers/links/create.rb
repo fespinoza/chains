@@ -5,6 +5,7 @@ module Web
       # POST '/links' endpoint action
       class Create
         include Web::Action
+        accept :json
 
         def call(params)
           link = LinkRepository.new.create(params[:link])

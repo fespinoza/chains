@@ -107,6 +107,7 @@ GEM
       builder
       minitest (>= 5.0)
       ruby-progressbar
+    multi_json (1.12.1)
     nokogiri (1.7.0)
       mini_portile2 (~> 2.1.0)
     parser (2.3.1.4)
@@ -187,6 +188,7 @@ DEPENDENCIES
   hanami-model (~> 0.7)
   minitest
   minitest-reporters
+  multi_json
   pg
   pry
   pry-rescue
