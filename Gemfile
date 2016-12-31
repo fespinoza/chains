@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 source 'https://rubygems.org'
 
 ruby '2.3.1'
@@ -18,6 +19,9 @@ group :development do
   # Code reloading
   # See: http://hanamirb.org/guides/projects/code-reloading
   gem 'shotgun'
+
+  # Automatic Ruby code style checking tool.
+  gem 'rubocop'
 end
 
 group :test, :development do
